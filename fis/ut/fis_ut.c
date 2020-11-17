@@ -34,7 +34,6 @@ enum {
 	MAX_RPCS_IN_FLIGHT = 1,
 };
 
-static struct m0_net_xprt      *xprt = &m0_net_xprt_obj;
 static struct m0_net_domain     client_net_dom;
 static struct m0_rpc_client_ctx cctx = {
         .rcx_net_dom            = &client_net_dom,
@@ -47,6 +46,7 @@ static struct m0_rpc_client_ctx cctx = {
 static void fis_ut_motr_start(struct m0_rpc_server_ctx *rctx)
 {
 	int rc;
+	struct m0_net_xprt *m0_conf_ut_xprt = m0_net_xprt_get();
 #define NAME(ext) "fis-ut" ext
 	char *argv[] = {
 		NAME(""), "-T", "AD", "-D", NAME(".db"), "-j" /* fis enabled */,
@@ -74,7 +74,8 @@ static void fis_ut_motr_stop(struct m0_rpc_server_ctx *rctx)
 
 static void fis_ut_client_start(void)
 {
-	int rc;
+	int                      rc;
+	struct m0_net_xprt      *xprt = m0_net_xprt_get();
 
 	rc = m0_net_domain_init(&client_net_dom, xprt);
 	M0_UT_ASSERT(rc == 0);

@@ -70,7 +70,10 @@ static struct m0_net_xprt *cs_xprts[] = {
 /* #ifdef ENABLE_LUSTRE */
 	&m0_net_lnet_xprt,
 /* #endif */
+#ifndef __KERNEL__
 	&m0_net_sock_xprt
+	/*&m0_net_libfabric_xprt*/
+#endif
 };
 
 /* Signal handler result */

@@ -256,6 +256,7 @@ static int net_test_network_ctx_initfini(struct m0_net_test_network_ctx *ctx,
 	struct m0_clink tmwait;
 	int		rc;
 	int		i;
+	struct m0_net_xprt *xprt = m0_net_xprt_get();
 
 	M0_PRE(ctx != NULL);
 	M0_PRE(equi(cfg != NULL, tm_addr != NULL));
@@ -284,7 +285,7 @@ static int net_test_network_ctx_initfini(struct m0_net_test_network_ctx *ctx,
 	if (ctx->ntc_ep == NULL)
 		goto free_buf_bulk;
 
-	rc = m0_net_domain_init(ctx->ntc_dom, &m0_net_xprt_obj);
+	rc = m0_net_domain_init(ctx->ntc_dom, xprt);
 	if (rc != 0)
 		goto free_ep;
 

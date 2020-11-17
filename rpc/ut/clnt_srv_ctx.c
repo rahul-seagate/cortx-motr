@@ -43,7 +43,7 @@ enum {
 	MAX_RETRIES        = 5,
 };
 
-static struct m0_net_xprt  *xprt = &m0_net_xprt_obj;
+//static struct m0_net_xprt  *xprt = m0_net_xprt_obj;
 static struct m0_net_domain client_net_dom;
 
 #ifndef __KERNEL__
@@ -71,6 +71,8 @@ static struct m0_rpc_server_ctx sctx;
  */
 static inline void sctx_reset(void)
 {
+
+	struct m0_net_xprt      *xprt = m0_net_xprt_get();
 	sctx = (struct m0_rpc_server_ctx){
 		.rsx_xprts            = &xprt,
 		.rsx_xprts_nr         = 1,
@@ -83,11 +85,13 @@ static inline void sctx_reset(void)
 static inline void start_rpc_client_and_server(void)
 {
 	int rc;
+	struct m0_net_xprt      *xprt = m0_net_xprt_get();
 
 	rc = m0_net_domain_init(&client_net_dom, xprt);
 	M0_ASSERT(rc == 0);
 
 	sctx_reset();
+	sctx.rsx_xprts = &xprt;
 	rc = m0_rpc_server_start(&sctx);
 	M0_ASSERT(rc == 0);
 
@@ -101,9 +105,10 @@ static inline void start_rpc_client_and_server(void)
 static inline void stop_rpc_client_and_server(void)
 {
 	int rc;
-
+        struct m0_net_xprt      *xprt = m0_net_xprt_get();
 	rc = m0_rpc_client_stop(&cctx);
 	M0_ASSERT(rc == 0);
+        sctx.rsx_xprts = &xprt;  
 	m0_rpc_server_stop(&sctx);
 	m0_net_domain_fini(&client_net_dom);
 }

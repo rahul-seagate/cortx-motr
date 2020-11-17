@@ -326,6 +326,7 @@ static void test_diter_net(void)
 {
 	struct m0_rpc_machine mach;
 	int                   rc;
+        struct m0_net_xprt   *m0_conf_ut_xprt = m0_net_xprt_get();
 #define NAME(ext) "utconfd" ext
 	char *argv[] = {
 		NAME(""), "-T", "AD", "-D", NAME(".db"),
